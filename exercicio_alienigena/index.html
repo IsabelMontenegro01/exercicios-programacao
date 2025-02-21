@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isabel Montenegro</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style> body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } </style>
+</head>
+
+<body>
+    <script>
+        // Define o tamanho da tela em que o jogo aparece
+        const larguraJogo = 700;
+        const alturaJogo = 850;
+
+        // Configurações básicas de um jogo Phaser
+        const config = {
+            type: Phaser.AUTO,
+            width: larguraJogo,
+            height: alturaJogo,
+
+            // física do jogo
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 },
+                    debug: true
+                }
+            }, 
+
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        // "Criação" do jogo usando Phaser
+        const game = new Phaser.Game(config);
+
+        var imagens = ['background', 'player', 'turbo_nave', 'plataforma_tijolo', 'plataforma2_tijolo','moeda']
+        var alien;
+        var teclado;
+        var fogo;
+        var plataforma;
+        var plataforma2;
+        var moeda;
+        var pontuacao = 0;
+        var placar;
+        
+
+        function preload() {
+            // Imagem de fundo
+            this.load.image(imagens[0], 'assets/bg.png');
+
+            // Imagem do alienigena
+            this.load.image(imagens[1], 'assets/alienigena.png');
+
+            // Imagem fogo
+            this.load.image(imagens[2], 'assets/turbo.png');
+
+            // Imagem tijolo central
+            this.load.image(imagens[3], 'assets/tijolos.png');
+
+            // Imagem tijolo 2
+            this.load.image(imagens[4], 'assets/tijolos2.png');
+
+            // Imagem moeda
+            this.load.image(imagens[5], 'assets/moeda.png');
+        }
+
+        function create() {
+            // Definindo o espaço ocupado pela imagem de fundo
+            this.add.image(larguraJogo/2, alturaJogo/2, imagens[0]);
+
+            // "Foguinho" no modo turbo
+            fogo = this.add.sprite(0, 0, imagens[2]);
+            fogo.setVisible(false);
+
+            // Alienigena
+            alien = this.physics.add.sprite(larguraJogo/2, 0, imagens[1]);
+            alien.setCollideWorldBounds(true);
+
+            teclado = this.input.keyboard.createCursorKeys();
+
+            // Adicionando plataforma
+            plataforma = this.physics.add.staticImage(larguraJogo/2, alturaJogo/2, imagens[3]);
+            this.physics.add.collider(alien, plataforma);
+
+            //Adicionando plataforma 2
+            plataforma2 = this.physics.add.staticImage(larguraJogo/2, alturaJogo/4, imagens[4]);
+            this.physics.add.collider(alien, plataforma2);
+
+
+            // Adicionando a moeda
+            moeda = this.physics.add.sprite(larguraJogo/2, 0, imagens[5]);
+            moeda.setCollideWorldBounds(true);
+            moeda.setBounce(0.7);
+            this.physics.add.collider(moeda, plataforma);
+            this.physics.add.collider(moeda, plataforma2);
+
+            // Adicionar placar
+            placar = this.add.text(50, 150, 'Moedas:' + pontuacao, {fontSize: '45px', fill: '#495613'});
+
+            // Quando o alien encostar na moeda 
+            this.physics.add.overlap(alien, moeda, function(){
+                moeda.setVisible(false); // moeda fica "invisível"
+                var posicaoMoeda_Y = Phaser.Math.RND.between(50,650); // sorteia número
+                moeda.setPosition(posicaoMoeda_Y, 100); // ajusta a posição da moeda
+                pontuacao +=1; // soma pontuação
+                placar.setText('Moedas:' + pontuacao); // atualiza texto do placar
+                moeda.setVisible(true); // ativa a visão da "nova moeda"
+
+            });
+
+        }
+
+        function update() {
+
+            // Movimento para esquerda
+            if (teclado.left.isDown) {
+                alien.setVelocityX(-150); } 
+
+            // Movimento para direita
+            else if (teclado.right.isDown) {
+                alien.setVelocityX(150);}
+
+            // Sem movimento horizontal [x=0]
+            else {
+                alien.setVelocityX(0);
+            }   
+            
+            // Movimento para cima
+            if (teclado.up.isDown) {
+                alien.setVelocityY(-150);
+                ativarTurbo();
+            }
+
+            // Movimento para baixo 
+            else { semTurbo ();}    
+            
+            // Atualiza a posição do "foguinho" em relação ao alien
+            fogo.setPosition(alien.x, alien.y + alien.height/2);
+        }
+
+        function ativarTurbo () {
+            fogo.setVisible(true);
+        }
+
+        function semTurbo(){
+            fogo.setVisible(false);
+        }
+
+    </script>
+</body>
+</html>
