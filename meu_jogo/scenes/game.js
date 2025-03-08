@@ -15,11 +15,11 @@ export class GameScene extends Phaser.Scene {
 
     preload() {
         //Carega as imagens usadas na cena
-        this.load.image("paisagem", "../assets/paisagem.png");
-        this.load.image("plataforma", "../assets/plataforma.png");
-        this.load.audio("musicaFundo", "../assets/musica.mp3");
-        this.load.image("caveira", "../assets/caveira.png");
-        this.load.image("fantasma", "../assets/fantasma.png");
+        this.load.image("paisagem", "./assets/paisagem.png");
+        this.load.image("plataforma", "./assets/plataforma.png");
+        this.load.audio("musicaFundo", "./assets/musica.mp3");
+        this.load.image("caveira", "./assets/caveira.png");
+        this.load.image("fantasma", "./assets/fantasma.png");
     }
 
     create() {
