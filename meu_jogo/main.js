@@ -33,3 +33,4 @@ const config = {
 
 // Cria uma nova instância do jogo Phaser com a configuração definida acima
 const game = new Phaser.Game(config);
+

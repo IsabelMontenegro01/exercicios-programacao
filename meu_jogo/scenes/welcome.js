@@ -16,14 +16,21 @@ export class WelcomeScene extends Phaser.Scene {
         this.load.image("computador", "./assets/computador_paisagem.png");
         this.load.image("fantasma", "./assets/fantasma.png");
         this.load.image("play", "./assets/botao_play.png");
+        this.load.image("play2", "./assets/botao_play2.png");
     }
 
     create() {
         //Adiciona o fundo da tela inicial
         this.add.image(this.larguraJogo/2, this.alturaJogo/2, "computador");
 
-        //Adiciona o botão play
-        this.botaoJogar = this.add.image(this.larguraJogo/2, 290, "play").setScale(0.2).setInteractive();
+            //verifica tipo de dispositivo
+        if (this.game.device.os.desktop){
+            this.botaoJogar = this.add.image(this.larguraJogo/2, 290, "play").setScale(0.2).setInteractive();
+
+        } else{
+            this.botaoJogar = this.add.image(this.larguraJogo/2, 290, "play2").setScale(0.5).setInteractive();
+        }
+
 
         //O cursor muda para símbolo de clicável, ao passar o mouse pelo botão play
         this.botaoJogar.on("pointerover", () => {
@@ -37,6 +44,7 @@ export class WelcomeScene extends Phaser.Scene {
         this.botaoJogar.on("pointerdown", () => {
             this.scene.start("MainScene")
         })
+
     }
 
     update() {

@@ -103,6 +103,10 @@ export class GameScene extends Phaser.Scene {
 
         //Adiciona o placar na tela
         this.placar = this.add.text(50, 50, 'Pontuação:' + this.pontuacao, {fontSize:'45px', fill:'#FFFFFF'});
+
+        
+
+
     }
 
     update() {
